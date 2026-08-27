@@ -1,4 +1,6 @@
 import { defineConfig } from 'vitepress'
+//自动生成侧边栏插件
+import Sidebar from 'vitepress-plugin-sidebar-resolve'
 
 
 export default defineConfig({
@@ -15,30 +17,65 @@ export default defineConfig({
     ['link', { rel: 'icon', href: '/my_site/favicon.svg' }],
   ],
 
+  vite: {
+    plugins: [
+      Sidebar({//侧边栏插件配置
+        //  path: '.',               // 扫描 Docs 文档根
+        // 开启则校验文件名是否为"数字."开头，不符就警告/忽略
+        // fileIndexPrefix: true,
+        titleFormMd: true,       // 取一级标题作为侧边栏文字
+        initItems: false,        // 直接显示文件列表，不包分组
+        //initItemsText: true,   //当 initItems 为 true 时生效
+
+        //collapsed: true,         // 默认折叠侧边栏
+        collapsed: (relativePath) => {
+          return relativePath.split('/').length >= 2   // 第1层展开,≥2层折叠
+        },
+
+        ignoreList: [            // 忽略非md文档的文件
+          'assets',                                   // 整个 assets 目录
+          /\.(png|jpe?g|gif|svg|webp|ico)$/i,         // 图片
+          /\.(zip|tar\.gz|7z|rar|url|exe|dmg|pdf)$/i, // 压缩包/可执行/PDF
+        ],
+      })
+    ],
+  },
+
   themeConfig: {
+    // 侧边栏由插件自动生成，无需手动配置 sidebar
+    //  sidebar: [{}],
+
+    socialLinks: [//我的GitHub链接
+      { icon: 'github', link: 'https://github.com/shhuz/my_site' }
+    ],
+
     docFooter: { // 文档底部翻页汉化
       prev: '上一页',
       next: '下一页',
     },
     logo: '/logo.svg',//网站左上角的 logo
 
-    socialLinks: [//我的GitHub链接
-      { icon: 'github', link: 'https://github.com/shhuz/my_site' }
-    ],
 
-    nav: [
+    nav: [  // 导航栏
       { text: '首页', link: '/' },
+      {
+        text: '职业路线',
+        items: [
+          { text: '嵌入式 Linux', link: '/01.职业路线/嵌入式Linux/' },
+          { text: 'Qt 开发', link: '/01.职业路线/Qt开发/' },
+        ]
+      },
       {
         text: '教程',
         items: [
           { text: '建同款网站', link: '/02.教程/01.复现同款网站/' },
-
+          { text: '通信协议', link: '/02.教程/04.协议/' },
+          { text: 'Linux 教程', link: '/02.教程/05.Linux教程/' },
         ]
       },
+      //TODO: 待添加
 
     ],
-
-
 
   }
 })

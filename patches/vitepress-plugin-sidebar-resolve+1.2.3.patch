@@ -1,0 +1,42 @@
+--- a/node_modules/vitepress-plugin-sidebar-resolve/dist/index.mjs
++++ b/node_modules/vitepress-plugin-sidebar-resolve/dist/index.mjs
+@@ -147,6 +147,30 @@
+     }
+   }
+   const dirPaths = readDirPaths(path, ignoreList);
++  // 只在默认（第一层）基础上，再为第二层子目录生成独立 sidebar key
++  const buildSecondLevelSidebar = (dirPath, dirKey) => {
++    const subDirs = readDirPaths(dirPath, ignoreList);
++    subDirs.forEach((subDir) => {
++      const subName = basename(subDir);
++      const subItems = createSidebarItems$1(subDir, option, `${dirKey}${subName}/`);
++      if (!ignoreWarn && !subItems.length) return;
++      const { name, title } = resolveFileName(subName, subDir, indexSeparator);
++      const info = getInfoFromMarkdownDir(subDir, subName);
++      const mdTitle = titleFormMd ? info.title : "";
++      const subPrefix = (info.prefix && (prefixTransform?.(info.prefix) ?? info.prefix)) ?? "";
++      const subSuffix = (info.suffix && (suffixTransform?.(info.suffix) ?? info.suffix)) ?? "";
++      const subText = subPrefix + (mdTitle || title) + subSuffix;
++      const subItem = {
++        text: subText,
++        collapsed: typeof collapsed === "function" ? collapsed(dirKey + name, subText) : collapsed,
++        items: subItems
++      };
++      const subKey = `${dirKey}${subName}/`;
++      if (isSidebarObject) {
++        sidebarObj[subKey] = initItems ? [{ ...subItem, text: initItemsText ? subText : "" }] : subItems;
++      } else sidebarArray.push(subItem);
++    });
++  };
+   dirPaths.forEach((dirPath) => {
+     const fileName = basename(dirPath);
+     const sidebarItems = createSidebarItems$1(dirPath, option, `${key}${fileName}/`);
+@@ -167,6 +191,8 @@
+     if (isSidebarObject) {
+       sidebarObj[`${key}${fileName}/`] = initItems ? [{ ...sidebarItem, text: initItemsText ? text : "" }] : sidebarItems;
+     } else sidebarArray.push(sidebarItem);
++    // 为该顶层目录的第二层子目录生成独立 sidebar
++    buildSecondLevelSidebar(dirPath, `${key}${fileName}/`);
+   });
+   const finalSidebar = isSidebarObject ? sidebarObj : sidebarArray;
+   return sidebarResolved?.(finalSidebar) ?? finalSidebar;
