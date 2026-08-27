@@ -12,7 +12,7 @@ export default defineConfig({
 
   head: [//往生成页面的 < head > 标签里注入任意 HTML 元素的字段。
     //网站图标
-    ['link', { rel: 'icon', href: '/favicon.svg' }],
+    ['link', { rel: 'icon', href: '/my_site/favicon.svg' }],
   ],
 
   themeConfig: {
