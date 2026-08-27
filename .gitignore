@@ -1,0 +1,9 @@
+# git 忽略项
+##################
+
+# bun
+node_modules
+
+# VitePress
+docs/.vitepress/dist
+docs/.vitepress/cache
