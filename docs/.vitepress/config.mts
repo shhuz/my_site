@@ -29,8 +29,12 @@ export default defineConfig({
 
         //collapsed: true,         // 默认折叠侧边栏
         collapsed: (relativePath) => {
-          return relativePath.split('/').length >= 2   // 第1层展开,≥2层折叠
+          const parts = relativePath.replace(/^\//, '').split('/').filter(Boolean)
+          // 展开:1段(顶层教程)、2段(03.工具/03.CMake)、3段(含 cmake笔记/进阶 的独立组)
+          // 只有更深(>=4)才折叠
+          return parts.length >= 4
         },
+
 
         ignoreList: [            // 忽略非md文档的文件
           'assets',                                   // 整个 assets 目录
@@ -68,12 +72,41 @@ export default defineConfig({
       {
         text: '教程',
         items: [
-          { text: '建同款网站', link: '/02.教程/01.复现同款网站/' },
-          { text: '通信协议', link: '/02.教程/04.协议/' },
+          { text: '通信协议', link: '/02.教程/04.通信协议/' },
           { text: 'Linux 教程', link: '/02.教程/05.Linux教程/' },
         ]
       },
       //TODO: 待添加
+      {
+        text: '编程语言',
+        items: [
+          { text: 'Python', link: '/04.编程语言/04.Python' },
+          {
+            text: '汇编', link: '/04.编程语言/03.汇编/'
+          },
+
+        ]
+      },
+
+      {
+        text: '工具',
+        items: [
+          { text: 'CMake', link: '/03.工具/03.CMake' },
+        ]
+      },
+      {
+        text: '其它教程',
+        items: [
+          { text: '建同款网站', link: '/05.其它教程/01.复现同款网站/01.md' },
+        ]
+      },
+      {
+        text: '资源',
+        items: [
+          { text: '资源1', link: '/06.资源' },
+        ]
+      },
+
 
     ],
 

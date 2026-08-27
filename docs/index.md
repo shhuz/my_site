@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: 开始
-      link: /xxx/xxx
+      link: /05.其它教程/01.复现同款网站
     - theme: alt
       text: 666
       link: /xxx/xxx
@@ -17,7 +17,7 @@ hero:
 features:
   - title: 建同款网站
     details: 详细教程
-    link: /02.教程/01.复现同款网站/
+    link: /05.其它教程/01.复现同款网站
   - title: 1
     details: 111
   - title: 2
